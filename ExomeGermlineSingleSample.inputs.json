@@ -1,9 +1,7 @@
 {
   "ExomeGermlineSingleSample.sample_and_unmapped_bams": {
+    "input_cram": "",
     "final_gvcf_base_name": "HG00133.GRCh38DH.exome",
-    "unmapped_bam_suffix": ".unmapped.bam",
-    "flowcell_unmapped_bams": ["gs://gatk-best-practices/exome-analysis-pipeline/SRR099969.unmapped.bam"],
-    "sample_name": "HG00133",
     "base_file_name": "HG00133.GRCh38DH.exome"
   },
 
@@ -37,10 +35,6 @@
     "evaluation_interval_list": "gs://broad-references/hg38/v0/exome_evaluation_regions.v1.interval_list",
     "haplotype_scatter_count": 50 
   },
-
-  "ExomeGermlineSingleSample.target_interval_list": "gs://broad-references/hg38/v0/exome_calling_regions.v1.interval_list",
-  "ExomeGermlineSingleSample.bait_interval_list": "gs://broad-references/hg38/v0/exome_calling_regions.v1.interval_list",
-  "ExomeGermlineSingleSample.bait_set_name": "whole_exome_illumina_coding_v1",
 
   "ExomeGermlineSingleSample.papi_settings": {
     "preemptible_tries": 3,

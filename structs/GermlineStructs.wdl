@@ -2,10 +2,8 @@ version 1.0
 
 struct SampleAndUnmappedBams {
   String base_file_name
+  File input_cram
   String final_gvcf_base_name
-  Array[File] flowcell_unmapped_bams
-  String sample_name
-  String unmapped_bam_suffix
 }
 
 struct ReferenceFasta {
