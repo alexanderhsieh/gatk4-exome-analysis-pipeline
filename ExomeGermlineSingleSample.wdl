@@ -28,11 +28,11 @@ version 1.0
 ## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
-import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/tasks/GermlineVariantDiscovery.wdl" as Calling
-import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/tasks/Qc.wdl" as QC
-import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/tasks/Utilities.wdl" as Utils
-import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/tasks/VariantCalling.wdl" as ToGvcf
-import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/structs/GermlineStructs.wdl"
+import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/tasks/GermlineVariantDiscovery.wdl" as Calling
+import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/tasks/Utilities.wdl" as Utils
+import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/tasks/VariantCalling.wdl" as ToGvcf
+import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/structs/GermlineStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow ExomeGermlineSingleSample {
