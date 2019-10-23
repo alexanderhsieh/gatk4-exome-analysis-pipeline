@@ -28,11 +28,11 @@ version 1.0
 ## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
-import "tasks/GermlineVariantDiscovery.wdl" as Calling
-import "tasks/Qc.wdl" as QC
-import "tasks/Utilities.wdl" as Utils
-import "tasks/VariantCalling.wdl" as ToGvcf
-import "structs/GermlineStructs.wdl"
+import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/tasks/GermlineVariantDiscovery.wdl" as Calling
+import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/tasks/Qc.wdl" as QC
+import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/tasks/Utilities.wdl" as Utils
+import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/tasks/VariantCalling.wdl" as ToGvcf
+import "https://github.com/talkowski-lab/gatk4-exome-analysis-pipeline/tree/master/structs/GermlineStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow ExomeGermlineSingleSample {
