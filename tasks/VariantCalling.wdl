@@ -54,6 +54,7 @@ workflow VariantCalling {
       call Calling.HaplotypeCaller_GATK35_GVCF as HaplotypeCallerGATK3 {
         input:
         input_bam = input_bam,
+        input_crai = input_crai,
         interval_list = scattered_interval_list,
         gvcf_basename = base_file_name,
         ref_dict = ref_dict,
