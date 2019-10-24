@@ -103,7 +103,7 @@ task HaplotypeCaller_GATK4_VCF {
 
   parameter_meta {
     input_bam: {
-      localization_optional: true
+      localization_optional: false
     }
   }
 
