@@ -14,6 +14,7 @@ workflow VariantCalling {
     Int break_bands_at_multiples_of
     Float? contamination
     File input_bam
+    File input_crai
     File ref_fasta
     File ref_fasta_index
     File ref_dict
@@ -71,6 +72,7 @@ workflow VariantCalling {
         input:
           contamination = contamination,
           input_bam = input_bam,
+          input_crai= input_crai,
           interval_list = scattered_interval_list,
           vcf_basename = base_file_name,
           ref_dict = ref_dict,

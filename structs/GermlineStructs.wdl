@@ -3,6 +3,7 @@ version 1.0
 struct SampleAndUnmappedBams {
   String base_file_name
   File input_cram
+  File input_crai
   String final_gvcf_base_name
 }
 

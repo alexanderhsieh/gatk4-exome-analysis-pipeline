@@ -52,6 +52,7 @@ workflow ExomeGermlineSingleSample {
       haplotype_scatter_count = references.haplotype_scatter_count,
       break_bands_at_multiples_of = references.break_bands_at_multiples_of,
       input_bam = sample_and_unmapped_bams.input_cram,
+      input_crai = sample_and_unmapped_bams.input_crai,
       ref_fasta = references.reference_fasta.ref_fasta,
       ref_fasta_index = references.reference_fasta.ref_fasta_index,
       ref_dict = references.reference_fasta.ref_dict,
