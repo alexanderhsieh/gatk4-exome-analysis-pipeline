@@ -92,7 +92,7 @@ task HaplotypeCaller_GATK4_VCF {
     Boolean make_bamout
     Int preemptible_tries
     Int hc_scatter
-    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.0.10.1"
+    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.2.0"
   }
 
   String output_suffix = if make_gvcf then ".g.vcf.gz" else ".vcf.gz"
@@ -118,6 +118,7 @@ task HaplotypeCaller_GATK4_VCF {
       -L ~{interval_list} \
       -O ~{output_file_name} \
       --interval-padding 100 \
+      --standard-min-confidence-threshold-for-calling 10.0 \
       -contamination ~{default=0 contamination} \
       -G StandardAnnotation -G StandardHCAnnotation ~{true="-G AS_StandardAnnotation" false="" make_gvcf} \
       -new-qual \
