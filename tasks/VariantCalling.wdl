@@ -45,7 +45,7 @@ workflow VariantCalling {
   # If we take the number we are scattering by and reduce by 20 we will have enough disk space
   # to account for the fact that the data is quite uneven across the shards.
   Int potential_hc_divisor = ScatterIntervalList.interval_count - 20
-  Int hc_divisor = if potential_hc_divisor > 1 then potential_hc_divisor else 1
+  Int hc_divisor = 1
 
   # Call variants in parallel over WGS calling intervals
   scatter (scattered_interval_list in ScatterIntervalList.out) {
