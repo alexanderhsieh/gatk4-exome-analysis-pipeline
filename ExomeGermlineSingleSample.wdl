@@ -43,8 +43,24 @@ workflow ExomeGermlineSingleSample {
     Array[String] base_file_name
     Array[String] final_gvcf_base_name
 
-    PapiSettings papi_settings
-    GermlineSingleSampleReferences references
+    Int preemptible_tries             # default: 3
+    Int agg_preemptible_tries         # defult: 3
+
+    Int break_bands_at_multiples_of   # default: 1000000
+    File calling_interval_list        # gs://broad-references/hg38/v0/exome_calling_regions.v1.interval_list
+    File evaluation_interval_list     # gs://broad-references/hg38/v0/exome_evaluation_regions.v1.interval_list
+    File dbsnp_vcf                    # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf
+    File dbsnp_vcf_index              # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf.idx
+    File ref_fasta                    # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta
+    File ref_fasta_index              # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.fai
+    File ref_dict                     # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.dict
+    File ref_alt                      # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.64.alt
+    File ref_ann                      # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.64.ann
+    File ref_sa                       # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.64.sa
+    File ref_amb                      # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.64.amb
+    File ref_bwt                      # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.64.bwt
+    File ref_pac                      # gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.64.pac
+    Int haplotype_scatter_count       # 50
 
   }
 
@@ -52,20 +68,20 @@ workflow ExomeGermlineSingleSample {
 
     call ToGvcf.VariantCalling as BamToGvcf {
       input:
-        calling_interval_list = references.calling_interval_list,
-        evaluation_interval_list = references.evaluation_interval_list,
-        haplotype_scatter_count = references.haplotype_scatter_count,
-        break_bands_at_multiples_of = references.break_bands_at_multiples_of,
+        calling_interval_list = calling_interval_list,
+        evaluation_interval_list = evaluation_interval_list,
+        haplotype_scatter_count = haplotype_scatter_count,
+        break_bands_at_multiples_of = break_bands_at_multiples_of,
         input_bam = input_bams[scatter_index],
         input_crai = input_bais[scatter_index],
-        ref_fasta = references.reference_fasta.ref_fasta,
-        ref_fasta_index = references.reference_fasta.ref_fasta_index,
-        ref_dict = references.reference_fasta.ref_dict,
-        dbsnp_vcf = references.dbsnp_vcf,
-        dbsnp_vcf_index = references.dbsnp_vcf_index,
+        ref_fasta = ref_fasta,
+        ref_fasta_index = ref_fasta_index,
+        ref_dict = ref_dict,
+        dbsnp_vcf = dbsnp_vcf,
+        dbsnp_vcf_index = dbsnp_vcf_index,
         base_file_name = base_file_name[scatter_index],
         final_vcf_base_name = final_gvcf_base_name[scatter_index],
-        agg_preemptible_tries = papi_settings.agg_preemptible_tries
+        agg_preemptible_tries = agg_preemptible_tries
     }
 
 
