@@ -95,6 +95,8 @@ workflow ExomeGermlineSingleSample {
       input:
         base_file_name = base_file_name[scatter_index],
         unmapped_bam = unmapped_bams[scatter_index],
+        sample_name = sample_name[scatter_index],
+        final_gvcf_base_name = final_gvcf_base_name[scatter_index],
         unmapped_bam_suffix = unmapped_bam_suffix,
 
         contamination_sites_ud = contamination_sites_ud,
