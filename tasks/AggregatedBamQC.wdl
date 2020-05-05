@@ -28,6 +28,9 @@ input {
     String recalibrated_bam_base_name
     File? haplotype_database_file
     GermlineSingleSampleReferences references
+    File ref_fasta
+    File ref_fasta_index
+    File ref_dict
     PapiSettings papi_settings
   }
 
@@ -37,9 +40,9 @@ input {
       input_bam = base_recalibrated_bam,
       input_bam_index = base_recalibrated_bam_index,
       output_bam_prefix = base_name + ".readgroup",
-      ref_dict = references.reference_fasta.ref_dict,
-      ref_fasta = references.reference_fasta.ref_fasta,
-      ref_fasta_index = references.reference_fasta.ref_fasta_index,
+      ref_dict = ref_dict,
+      ref_fasta = ref_fasta,
+      ref_fasta_index = ref_fasta_index,
       preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
@@ -49,9 +52,9 @@ input {
       input_bam = base_recalibrated_bam,
       input_bam_index = base_recalibrated_bam_index,
       output_bam_prefix = base_name,
-      ref_dict = references.reference_fasta.ref_dict,
-      ref_fasta = references.reference_fasta.ref_fasta,
-      ref_fasta_index = references.reference_fasta.ref_fasta_index,
+      ref_dict = ref_dict,
+      ref_fasta = ref_fasta,
+      ref_fasta_index = ref_fasta_index,
       preemptible_tries = papi_settings.agg_preemptible_tries
   }
 

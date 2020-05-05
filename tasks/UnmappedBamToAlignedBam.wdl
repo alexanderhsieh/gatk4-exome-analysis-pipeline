@@ -41,8 +41,6 @@ workflow UnmappedBamToAlignedBam {
     File ref_ann
     File ref_pac
 
-    ReferenceFasta reference_fasta
-
     File contamination_sites_ud
     File contamination_sites_bed
     File contamination_sites_mu
