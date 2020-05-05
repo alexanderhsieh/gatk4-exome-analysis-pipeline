@@ -28,59 +28,62 @@ version 1.0
 ## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
-import "https://raw.githubusercontent.com/gevro/gatk4-exome-analysis-pipeline-flat/master/tasks/UnmappedBamToAlignedBam.wdl" as ToBam
-import "https://raw.githubusercontent.com/gevro/gatk4-exome-analysis-pipeline-flat/master/tasks/AggregatedBamQC.wdl" as AggregatedQC
-import "https://raw.githubusercontent.com/gevro/gatk4-exome-analysis-pipeline-flat/master/tasks/GermlineVariantDiscovery.wdl" as Calling
-import "https://raw.githubusercontent.com/gevro/gatk4-exome-analysis-pipeline-flat/master/tasks/Qc.wdl" as QC
-import "https://raw.githubusercontent.com/gevro/gatk4-exome-analysis-pipeline-flat/master/tasks/Utilities.wdl" as Utils
-import "https://raw.githubusercontent.com/gevro/gatk4-exome-analysis-pipeline-flat/master/tasks/BamToCram.wdl" as ToCram
-import "https://raw.githubusercontent.com/gevro/gatk4-exome-analysis-pipeline-flat/master/tasks/VariantCalling.wdl" as ToGvcf
-import "https://raw.githubusercontent.com/gevro/gatk4-exome-analysis-pipeline-flat/master/structs/GermlineStructs.wdl"
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/UnmappedBamToAlignedBam.wdl" as ToBam
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/AggregatedBamQC.wdl" as AggregatedQC
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/GermlineVariantDiscovery.wdl" as Calling
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/Utilities.wdl" as Utils
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/BamToCram.wdl" as ToCram
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/VariantCalling.wdl" as ToGvcf
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/structs/GermlineStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow ExomeGermlineSingleSample {
-
   input {
     PapiSettings papi_settings
     
     Array[String] base_file_name
-  	Array[String] final_gvcf_base_name
-  	Array[File] unmapped_bams
-  	Array[String] sample_name
-  	String unmapped_bam_suffix
+    Array[String] final_gvcf_base_name
+    Array[File] unmapped_bams
+    Array[String] sample_name
+    String unmapped_bam_suffix
     
- 	File ref_dict
- 	File ref_fasta
- 	File ref_fasta_index
- 	File ref_alt
- 	File ref_sa
- 	File ref_amb
- 	File ref_bwt
- 	File ref_ann
- 	File ref_pac
 
- 	File? fingerprint_genotypes_file
-	File? fingerprint_genotypes_index
+    File ref_dict
+    File ref_fasta
+    File ref_fasta_index
+    File ref_alt
+    File ref_sa
+    File ref_amb
+    File ref_bwt
+    File ref_ann
+    File ref_pac
 
-	Int haplotype_scatter_count
-	Int break_bands_at_multiples_of
+    File? fingerprint_genotypes_file
+    File? fingerprint_genotypes_index
 
-	Array[File] known_indels_sites_vcfs
-	Array[File] known_indels_sites_indices
+    File contamination_sites_ud
+    File contamination_sites_bed
+    File contamination_sites_mu
 
-	File dbsnp_vcf
-	File dbsnp_vcf_index
+    Int haplotype_scatter_count
+    Int break_bands_at_multiples_of
 
-	File calling_interval_list
-	File evaluation_interval_list
+    Array[File] known_indels_sites_vcfs
+    Array[File] known_indels_sites_indices
+
+    File dbsnp_vcf
+    File dbsnp_vcf_index
+
+    File calling_interval_list
+    File evaluation_interval_list
     File target_interval_list
     File bait_interval_list
 
     Boolean provide_bam_output = false
     File? haplotype_database_file
   }
-
-
+  
 
   scatter (scatter_index in range(length(unmapped_bams))){
     # Not overridable:
@@ -91,13 +94,16 @@ workflow ExomeGermlineSingleSample {
     call ToBam.UnmappedBamToAlignedBam {
       input:
         base_file_name = base_file_name[scatter_index],
-        final_gvcf_base_name = final_gvcf_base_name[scatter_index],
-        flowcell_unmapped_bams = unmapped_bams[scatter_index],
-        sample_name = sample_name[scatter_index],
+        #final_gvcf_base_name = final_gvcf_base_name[scatter_index],
+        unmapped_bam = unmapped_bams[scatter_index],
+        #sample_name = sample_name[scatter_index],
         unmapped_bam_suffix = unmapped_bam_suffix,
 
-        fingerprint_genotypes_file = fingerprint_genotypes_file,
-        fingerprint_genotypes_index = fingerprint_genotypes_index,
+        #fingerprint_genotypes_file = fingerprint_genotypes_file,
+        #fingerprint_genotypes_index = fingerprint_genotypes_index,
+        contamination_sites_ud = contamination_sites_ud,
+        contamination_sites_bed = contamination_sites_bed,
+        contamination_sites_mu = contamination_sites_mu,
         calling_interval_list = calling_interval_list,
         haplotype_scatter_count = haplotype_scatter_count,
         break_bands_at_multiples_of = break_bands_at_multiples_of,
@@ -133,28 +139,6 @@ workflow ExomeGermlineSingleSample {
         recalibrated_bam_base_name = recalibrated_bam_basename,
         haplotype_database_file = haplotype_database_file,
 
-        fingerprint_genotypes_file = fingerprint_genotypes_file,
-        fingerprint_genotypes_index = fingerprint_genotypes_index,
-        contamination_sites_ud = contamination_sites_ud,
-        contamination_sites_bed = contamination_sites_bed,
-        contamination_sites_mu = contamination_sites_mu,
-        calling_interval_list = calling_interval_list,
-        haplotype_scatter_count = haplotype_scatter_count,
-        break_bands_at_multiples_of = break_bands_at_multiples_of,
-        ref_dict = ref_dict,
-        ref_fasta = ref_fasta,
-        ref_fasta_index = ref_fasta_index,
-        ref_alt = ref_alt,
-        ref_sa = ref_sa,
-        ref_amb = ref_amb,
-        ref_bwt = ref_bwt,
-        ref_ann = ref_ann,
-        ref_pac = ref_pac,
-        known_indels_sites_vcfs = known_indels_sites_vcfs,
-        known_indels_sites_indices = known_indels_sites_indices,
-        dbsnp_vcf = dbsnp_vcf,
-        dbsnp_vcf_index = dbsnp_vcf_index,
-        evaluation_interval_list = evaluation_interval_list,
 
         papi_settings = papi_settings
     }
@@ -193,7 +177,7 @@ workflow ExomeGermlineSingleSample {
       input:
         input_bam = UnmappedBamToAlignedBam.output_bam,
         input_bam_index = UnmappedBamToAlignedBam.output_bam_index,
-        metrics_filename = base_file_name + ".hybrid_selection_metrics",
+        metrics_filename = base_file_name[scatter_index] + ".hybrid_selection_metrics",
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
         target_interval_list = target_interval_list,
