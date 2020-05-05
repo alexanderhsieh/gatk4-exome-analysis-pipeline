@@ -95,7 +95,7 @@ task SortSamSpark {
 # Mark duplicate reads to avoid counting non-independent observations
 task MarkDuplicates {
   input {
-    Array[File] input_bams
+    File input_bam
     String output_bam_basename
     String metrics_filename
     Float total_input_size
@@ -124,7 +124,7 @@ task MarkDuplicates {
   command {
     java -Dsamjdk.compression_level=~{compression_level} -Xms~{java_memory_size}g -jar /usr/gitc/picard.jar \
       MarkDuplicates \
-      INPUT=~{sep=' INPUT=' input_bams} \
+      INPUT=~{input_bam} \
       OUTPUT=~{output_bam_basename}.bam \
       METRICS_FILE=~{metrics_filename} \
       VALIDATION_STRINGENCY=SILENT \
@@ -148,7 +148,7 @@ task MarkDuplicates {
 
 task MarkDuplicatesSpark {
   input {
-    Array[File] input_bams
+    File input_bam
     String output_bam_basename
     String metrics_filename
     Float total_input_size
@@ -178,7 +178,7 @@ task MarkDuplicatesSpark {
     export GATK_LOCAL_JAR=/root/gatk.jar
     gatk --java-options "-Dsamjdk.compression_level=~{compression_level} -Xmx~{java_memory_size}g" \
       MarkDuplicatesSpark \
-      --input ~{sep=' --input ' input_bams} \
+      --input ~{input_bam} \
       --output ~{output_bam_location} \
       --metrics-file ~{metrics_filename} \
       --read-validation-stringency SILENT \
