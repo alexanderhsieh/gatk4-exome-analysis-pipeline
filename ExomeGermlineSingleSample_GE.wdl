@@ -94,13 +94,9 @@ workflow ExomeGermlineSingleSample {
     call ToBam.UnmappedBamToAlignedBam {
       input:
         base_file_name = base_file_name[scatter_index],
-        #final_gvcf_base_name = final_gvcf_base_name[scatter_index],
         unmapped_bam = unmapped_bams[scatter_index],
-        #sample_name = sample_name[scatter_index],
         unmapped_bam_suffix = unmapped_bam_suffix,
 
-        #fingerprint_genotypes_file = fingerprint_genotypes_file,
-        #fingerprint_genotypes_index = fingerprint_genotypes_index,
         contamination_sites_ud = contamination_sites_ud,
         contamination_sites_bed = contamination_sites_bed,
         contamination_sites_mu = contamination_sites_mu,
@@ -138,7 +134,9 @@ workflow ExomeGermlineSingleSample {
         sample_name = sample_name[scatter_index],
         recalibrated_bam_base_name = recalibrated_bam_basename,
         haplotype_database_file = haplotype_database_file,
-
+        ref_fasta = ref_fasta,
+        ref_fasta_index = ref_fasta_index,
+        ref_dict = ref_dict,
 
         papi_settings = papi_settings
     }
@@ -163,9 +161,10 @@ workflow ExomeGermlineSingleSample {
         break_bands_at_multiples_of = break_bands_at_multiples_of,
         contamination = UnmappedBamToAlignedBam.contamination,
         input_bam = UnmappedBamToAlignedBam.output_bam,
+        input_crai = UnmappedBamToAlignedBam.output_bam_index,
+        ref_dict = ref_dict,
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
-        ref_dict = ref_dict,
         dbsnp_vcf = dbsnp_vcf,
         dbsnp_vcf_index = dbsnp_vcf_index,
         base_file_name = base_file_name[scatter_index],
