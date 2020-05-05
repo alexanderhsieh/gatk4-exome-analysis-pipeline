@@ -28,6 +28,9 @@ workflow UnmappedBamToAlignedBam {
     File unmapped_bam
     String unmapped_bam_suffix
     String base_file_name
+    String sample_name
+    String final_gvcf_base_name
+
     File ref_dict
     File ref_fasta
     File ref_fasta_index
@@ -49,8 +52,8 @@ workflow UnmappedBamToAlignedBam {
     File dbsnp_vcf
     File dbsnp_vcf_index
 
-    File fingerprint_genotypes_file
-    File fingerprint_genotypes_index
+    File? fingerprint_genotypes_file
+    File? fingerprint_genotypes_index
   
     File calling_interval_list
     File evaluation_interval_list
