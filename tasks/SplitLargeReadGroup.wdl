@@ -54,7 +54,7 @@ workflow SplitLargeReadGroup {
         input_bam = unmapped_bam,
         bwa_commandline = bwa_commandline,
         output_bam_basename = current_name,
-        reference_fasta = reference_fasta,
+        reference_fasta = ~{reference_fasta.ref_fasta},
         bwa_version = bwa_version,
         compression_level = compression_level,
         preemptible_tries = preemptible_tries
