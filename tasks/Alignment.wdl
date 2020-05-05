@@ -64,7 +64,7 @@ task SamToFastqAndBwaMemAndMba {
     set -e
 
     # set the bash variable needed for the command-line
-    bash_ref_fasta=~{reference_fasta.ref_fasta}
+    bash_ref_fasta=~{reference_fasta}
     # if reference_fasta.ref_alt has data in it,
     if [ -s ~{reference_fasta.ref_alt} ]; then
       java -Xms1000m -Xmx1000m -jar /usr/gitc/picard.jar \
