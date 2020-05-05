@@ -15,9 +15,11 @@ workflow VariantCalling {
     Float? contamination
     File input_bam
     File input_crai
+
     File ref_fasta
     File ref_fasta_index
     File ref_dict
+    
     File dbsnp_vcf
     File dbsnp_vcf_index
     String base_file_name
