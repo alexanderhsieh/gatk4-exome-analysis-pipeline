@@ -44,8 +44,8 @@ workflow ExomeGermlineSingleSample {
     
     Array[String] base_file_name
     Array[String] final_gvcf_base_name
-    Array[File] unmapped_bams
     Array[String] sample_name
+    Array[File] unmapped_bams
     String unmapped_bam_suffix
     
 
@@ -95,8 +95,6 @@ workflow ExomeGermlineSingleSample {
       input:
         base_file_name = base_file_name[scatter_index],
         unmapped_bam = unmapped_bams[scatter_index],
-        sample_name = sample_name[scatter_index],
-        final_gvcf_base_name = final_gvcf_base_name[scatter_index],
         unmapped_bam_suffix = unmapped_bam_suffix,
 
         contamination_sites_ud = contamination_sites_ud,

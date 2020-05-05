@@ -28,8 +28,6 @@ workflow UnmappedBamToAlignedBam {
     File unmapped_bam
     String unmapped_bam_suffix
     String base_file_name
-    String final_gvcf_base_name
-    String sample_name
 
 
     File ref_dict
