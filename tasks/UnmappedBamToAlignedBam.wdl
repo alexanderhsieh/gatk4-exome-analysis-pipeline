@@ -258,21 +258,3 @@ workflow UnmappedBamToAlignedBam {
   }
 }
 
-
-
-task print_size{
-  input{
-    File bam
-    Float filesize
-  }
-
-  command {
-    echo ""
-    echo "####################"
-    echo ~{bam}
-    echo ~{filesize}
-    echo "####################"
-    echo ""
-  }
-
-}
