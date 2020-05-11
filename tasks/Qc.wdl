@@ -501,7 +501,7 @@ task CollectHsMetrics {
   }
 
   output {
-    File metrics = metrics_filename
+    File metrics = "~{metrics_filename}"
   }
 }
 

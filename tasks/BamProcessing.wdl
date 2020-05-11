@@ -200,7 +200,7 @@ task MarkDuplicatesSpark {
 
   output {
     File output_bam = output_bam_location
-    File duplicate_metrics = metrics_filename
+    File duplicate_metrics = "~{metrics_filename}"
   }
 }
 
