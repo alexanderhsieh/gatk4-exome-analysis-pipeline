@@ -467,7 +467,9 @@ task CollectHsMetrics {
     File target_interval_list
     File bait_interval_list
     Int preemptible_tries
-    Int memory_multiplier = 1
+
+    Int memory_multiplier = 1.25 
+    
   }
 
   Float ref_size = size(ref_fasta, "GiB") + size(ref_fasta_index, "GiB")
