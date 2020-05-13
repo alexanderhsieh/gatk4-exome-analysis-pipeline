@@ -492,6 +492,7 @@ task CollectHsMetrics {
       METRIC_ACCUMULATION_LEVEL=null \
       METRIC_ACCUMULATION_LEVEL=SAMPLE \
       METRIC_ACCUMULATION_LEVEL=LIBRARY \
+      MAX_RECORDS_IN_RAM=250000 \
       OUTPUT=~{metrics_filename}
   }
 
