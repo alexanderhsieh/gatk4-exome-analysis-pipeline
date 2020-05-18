@@ -148,7 +148,7 @@ task MarkDuplicates {
 
 task MarkDuplicatesSpark {
   input {
-    File input_bam
+    File input_bams
     String output_bam_basename
     String metrics_filename
     Float total_input_size
