@@ -25,7 +25,7 @@ import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pi
 # WORKFLOW DEFINITION
 workflow UnmappedBamToAlignedBam {
   input {
-    File flowcell_unmapped_bams
+    Array[File] flowcell_unmapped_bams
     String unmapped_bam_suffix
     String base_file_name
 
