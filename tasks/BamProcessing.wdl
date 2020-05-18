@@ -124,7 +124,7 @@ task MarkDuplicates {
   command {
     java -Dsamjdk.compression_level=~{compression_level} -Xms~{java_memory_size}g -jar /usr/gitc/picard.jar \
       MarkDuplicates \
-      INPUT=~{input_bams} \
+      INPUT=~{sep=' INPUT=' input_bams} \
       OUTPUT=~{output_bam_basename}.bam \
       METRICS_FILE=~{metrics_filename} \
       VALIDATION_STRINGENCY=SILENT \
@@ -178,7 +178,7 @@ task MarkDuplicatesSpark {
     export GATK_LOCAL_JAR=/root/gatk.jar
     gatk --java-options "-Dsamjdk.compression_level=~{compression_level} -Xmx~{java_memory_size}g" \
       MarkDuplicatesSpark \
-      --input ~{input_bam} \
+      --input ~{sep=' --input ' input_bams} \
       --output ~{output_bam_location} \
       --metrics-file ~{metrics_filename} \
       --read-validation-stringency SILENT \
