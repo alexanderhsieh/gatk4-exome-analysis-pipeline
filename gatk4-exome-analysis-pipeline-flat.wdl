@@ -159,7 +159,7 @@ workflow ExomeGermlineSingleSample {
       evaluation_interval_list = evaluation_interval_list,
       haplotype_scatter_count = haplotype_scatter_count,
       break_bands_at_multiples_of = break_bands_at_multiples_of,
-      contamination = UnmappedBamToAlignedBam.contamination,
+      #contamination = UnmappedBamToAlignedBam.contamination,
       input_bam = UnmappedBamToAlignedBam.output_bam,
       input_crai = UnmappedBamToAlignedBam.output_bam_index,
       ref_fasta = ref_fasta,
@@ -195,7 +195,7 @@ workflow ExomeGermlineSingleSample {
     File read_group_alignment_summary_metrics = AggregatedBamQC.read_group_alignment_summary_metrics
 
 
-    Float contamination = UnmappedBamToAlignedBam.contamination
+    #Float contamination = UnmappedBamToAlignedBam.contamination
 
     File calculate_read_group_checksum_md5 = AggregatedBamQC.calculate_read_group_checksum_md5
 
