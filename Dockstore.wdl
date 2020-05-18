@@ -194,9 +194,6 @@ workflow ExomeGermlineSingleSample {
 
     File read_group_alignment_summary_metrics = AggregatedBamQC.read_group_alignment_summary_metrics
 
-
-    #Float contamination = UnmappedBamToAlignedBam.contamination
-
     File calculate_read_group_checksum_md5 = AggregatedBamQC.calculate_read_group_checksum_md5
 
     File agg_alignment_summary_metrics = AggregatedBamQC.agg_alignment_summary_metrics
