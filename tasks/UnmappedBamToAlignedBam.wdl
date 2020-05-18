@@ -167,7 +167,7 @@ workflow UnmappedBamToAlignedBam {
   # to avoid having to spend time just merging BAM files.
   call Processing.MarkDuplicates as MarkDuplicates {
     input:
-      input_bams = output_aligned_bam,
+      input_bam = output_aligned_bam,
       output_bam_basename = base_file_name + ".aligned.unsorted.duplicates_marked",
       metrics_filename = base_file_name + ".duplicate_metrics",
       total_input_size = SumFloats.total_size,
