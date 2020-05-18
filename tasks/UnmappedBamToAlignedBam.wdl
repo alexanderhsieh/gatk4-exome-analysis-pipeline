@@ -101,7 +101,7 @@ workflow UnmappedBamToAlignedBam {
           bwa_commandline = bwa_commandline,
           bwa_version = GetBwaVersion.bwa_version,
           output_bam_basename = unmapped_bam_basename + ".aligned.unsorted",
-          reference_fasta = references.reference_fasta,
+          reference_fasta = ref_fasta,
           compression_level = compression_level,
           preemptible_tries = papi_settings.preemptible_tries
       }
@@ -114,7 +114,7 @@ workflow UnmappedBamToAlignedBam {
           input_bam = unmapped_bam,
           bwa_commandline = bwa_commandline,
           output_bam_basename = unmapped_bam_basename + ".aligned.unsorted",
-          reference_fasta = references.reference_fasta,
+          reference_fasta = ref_fasta,
           bwa_version = GetBwaVersion.bwa_version,
           compression_level = compression_level,
           preemptible_tries = papi_settings.preemptible_tries
@@ -188,7 +188,7 @@ workflow UnmappedBamToAlignedBam {
   # Create list of sequences for scatter-gather parallelization
   call Utils.CreateSequenceGroupingTSV as CreateSequenceGroupingTSV {
     input:
-      ref_dict = references.reference_fasta.ref_dict,
+      ref_dict = ref_dict,
       preemptible_tries = papi_settings.preemptible_tries
   }
 
@@ -197,11 +197,11 @@ workflow UnmappedBamToAlignedBam {
     input:
       input_bam = SortSampleBam.output_bam,
       input_bam_index = SortSampleBam.output_bam_index,
-      contamination_sites_ud = references.contamination_sites_ud,
-      contamination_sites_bed = references.contamination_sites_bed,
-      contamination_sites_mu = references.contamination_sites_mu,
-      ref_fasta = references.reference_fasta.ref_fasta,
-      ref_fasta_index = references.reference_fasta.ref_fasta_index,
+      contamination_sites_ud = contamination_sites_ud,
+      contamination_sites_bed = contamination_sites_bed,
+      contamination_sites_mu = contamination_sites_mu,
+      ref_fasta = ref_fasta,
+      ref_fasta_index = ref_fasta_index,
       output_prefix = base_file_name + ".preBqsr",
       preemptible_tries = papi_settings.agg_preemptible_tries,
       contamination_underestimation_factor = 0.75
@@ -222,13 +222,13 @@ workflow UnmappedBamToAlignedBam {
         input_bam = SortSampleBam.output_bam,
         recalibration_report_filename = base_file_name + ".recal_data.csv",
         sequence_group_interval = subgroup,
-        dbsnp_vcf = references.dbsnp_vcf,
-        dbsnp_vcf_index = references.dbsnp_vcf_index,
-        known_indels_sites_vcfs = references.known_indels_sites_vcfs,
-        known_indels_sites_indices = references.known_indels_sites_indices,
-        ref_dict = references.reference_fasta.ref_dict,
-        ref_fasta = references.reference_fasta.ref_fasta,
-        ref_fasta_index = references.reference_fasta.ref_fasta_index,
+        dbsnp_vcf = dbsnp_vcf,
+        dbsnp_vcf_index = dbsnp_vcf_index,
+        known_indels_sites_vcfs = known_indels_sites_vcfs,
+        known_indels_sites_indices = known_indels_sites_indices,
+        ref_dict = ref_dict,
+        ref_fasta = ref_fasta,
+        ref_fasta_index = ref_fasta_index,
         bqsr_scatter = bqsr_divisor,
         preemptible_tries = papi_settings.agg_preemptible_tries
     }
@@ -251,9 +251,9 @@ workflow UnmappedBamToAlignedBam {
         output_bam_basename = recalibrated_bam_basename,
         recalibration_report = GatherBqsrReports.output_bqsr_report,
         sequence_group_interval = subgroup,
-        ref_dict = references.reference_fasta.ref_dict,
-        ref_fasta = references.reference_fasta.ref_fasta,
-        ref_fasta_index = references.reference_fasta.ref_fasta_index,
+        ref_dict = ref_dict,
+        ref_fasta = ref_fasta,
+        ref_fasta_index = ref_fasta_index,
         bqsr_scatter = bqsr_divisor,
         compression_level = compression_level,
         preemptible_tries = papi_settings.agg_preemptible_tries
