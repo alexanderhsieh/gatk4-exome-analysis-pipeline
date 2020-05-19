@@ -25,7 +25,7 @@ import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pi
 # WORKFLOW DEFINITION
 workflow UnmappedBamToAlignedBam {
   input {
-    Array[File] flowcell_unmapped_bams
+    File flowcell_unmapped_bams
     String unmapped_bam_suffix
     String base_file_name
 
@@ -40,6 +40,9 @@ workflow UnmappedBamToAlignedBam {
     File ref_ann
     File ref_pac
 
+    File contamination_sites_ud
+    File contamination_sites_bed
+    File contamination_sites_mu
 
     Array[File] known_indels_sites_vcfs
     Array[File] known_indels_sites_indices
@@ -54,12 +57,16 @@ workflow UnmappedBamToAlignedBam {
 
     Int haplotype_scatter_count
     Int break_bands_at_multiples_of
+
     PapiSettings papi_settings
 
     String cross_check_fingerprints_by
     File? haplotype_database_file
     Float lod_threshold
     String recalibrated_bam_basename
+
+
+
   }
 
   Float cutoff_for_large_rg_in_gb = 20.0
@@ -75,99 +82,102 @@ workflow UnmappedBamToAlignedBam {
   # Get the size of the standard reference files as well as the additional reference files needed for BWA
 
   # Align flowcell-level unmapped input bams in parallel
-  scatter (unmapped_bam in flowcell_unmapped_bams) {
 
-    Float unmapped_bam_size = size(unmapped_bam, "GiB")
+  Float unmapped_bam_size = size(flowcell_unmapped_bams, "GiB")
 
-    String unmapped_bam_basename = basename(unmapped_bam, unmapped_bam_suffix)
+  String unmapped_bam_basename = basename(unmapped_bam, unmapped_bam_suffix)
 
-    # QC the unmapped BAM
-    call QC.CollectQualityYieldMetrics as CollectQualityYieldMetrics {
-      input:
-        input_bam = unmapped_bam,
-        metrics_filename = unmapped_bam_basename + ".unmapped.quality_yield_metrics",
-        preemptible_tries = papi_settings.preemptible_tries
-    }
-
-    if (unmapped_bam_size > cutoff_for_large_rg_in_gb) {
-      # Split bam into multiple smaller bams,
-      # map reads to reference and recombine into one bam
-      call SplitRG.SplitLargeReadGroup as SplitRG {
-        input:
-          input_bam = unmapped_bam,
-          bwa_commandline = bwa_commandline,
-          bwa_version = GetBwaVersion.bwa_version,
-          output_bam_basename = unmapped_bam_basename + ".aligned.unsorted",
-          ref_dict = ref_dict,
-          ref_fasta = ref_fasta,
-          ref_fasta_index = ref_fasta_index,
-          ref_alt = ref_alt,
-          ref_sa = ref_sa,
-          ref_amb = ref_amb,
-          ref_bwt = ref_bwt,
-          ref_ann = ref_ann,
-          ref_pac = ref_pac,
-          compression_level = compression_level,
-          preemptible_tries = papi_settings.preemptible_tries
-      }
-    }
-
-    if (unmapped_bam_size <= cutoff_for_large_rg_in_gb) {
-      # Map reads to reference
-      call Alignment.SamToFastqAndBwaMemAndMba as SamToFastqAndBwaMemAndMba {
-        input:
-          input_bam = unmapped_bam,
-          bwa_commandline = bwa_commandline,
-          output_bam_basename = unmapped_bam_basename + ".aligned.unsorted",
-          ref_dict = ref_dict,
-          ref_fasta = ref_fasta,
-          ref_fasta_index = ref_fasta_index,
-          ref_alt = ref_alt,
-          ref_sa = ref_sa,
-          ref_amb = ref_amb,
-          ref_bwt = ref_bwt,
-          ref_ann = ref_ann,
-          ref_pac = ref_pac,
-          bwa_version = GetBwaVersion.bwa_version,
-          compression_level = compression_level,
-          preemptible_tries = papi_settings.preemptible_tries
-      }
-    }
-
-    File output_aligned_bam = select_first([SamToFastqAndBwaMemAndMba.output_bam, SplitRG.aligned_bam])
-
-    Float mapped_bam_size = size(output_aligned_bam, "GiB")
-
-    # QC the aligned but unsorted readgroup BAM
-    # no reference as the input here is unsorted, providing a reference would cause an error
-    call QC.CollectUnsortedReadgroupBamQualityMetrics as CollectUnsortedReadgroupBamQualityMetrics {
-      input:
-        input_bam = output_aligned_bam,
-        output_bam_prefix = unmapped_bam_basename + ".readgroup",
-        preemptible_tries = papi_settings.preemptible_tries
-    }
-  }
-
-  # Sum the read group bam sizes to approximate the aggregated bam size
-  call Utils.SumFloats as SumFloats {
+  # QC the unmapped BAM
+  call QC.CollectQualityYieldMetrics as CollectQualityYieldMetrics {
     input:
-      sizes = mapped_bam_size,
+      input_bam = unmapped_bam,
+      metrics_filename = unmapped_bam_basename + ".unmapped.quality_yield_metrics",
       preemptible_tries = papi_settings.preemptible_tries
   }
 
+  if (unmapped_bam_size > cutoff_for_large_rg_in_gb) {
+    # Split bam into multiple smaller bams,
+    # map reads to reference and recombine into one bam
+    call SplitRG.SplitLargeReadGroup as SplitRG {
+      input:
+        input_bam = unmapped_bam,
+        bwa_commandline = bwa_commandline,
+        bwa_version = GetBwaVersion.bwa_version,
+        output_bam_basename = unmapped_bam_basename + ".aligned.unsorted",
+        ref_dict = ref_dict,
+        ref_fasta = ref_fasta,
+        ref_fasta_index = ref_fasta_index,
+        ref_alt = ref_alt,
+        ref_sa = ref_sa,
+        ref_amb = ref_amb,
+        ref_bwt = ref_bwt,
+        ref_ann = ref_ann,
+        ref_pac = ref_pac,
+        compression_level = compression_level,
+        preemptible_tries = papi_settings.preemptible_tries
+    }
+  }
+
+  if (unmapped_bam_size <= cutoff_for_large_rg_in_gb) {
+    # Map reads to reference
+    call Alignment.SamToFastqAndBwaMemAndMba as SamToFastqAndBwaMemAndMba {
+      input:
+        input_bam = unmapped_bam,
+        bwa_commandline = bwa_commandline,
+        output_bam_basename = unmapped_bam_basename + ".aligned.unsorted",
+        ref_dict = ref_dict,
+        ref_fasta = ref_fasta,
+        ref_fasta_index = ref_fasta_index,
+        ref_alt = ref_alt,
+        ref_sa = ref_sa,
+        ref_amb = ref_amb,
+        ref_bwt = ref_bwt,
+        ref_ann = ref_ann,
+        ref_pac = ref_pac,
+        bwa_version = GetBwaVersion.bwa_version,
+        compression_level = compression_level,
+        preemptible_tries = papi_settings.preemptible_tries
+    }
+  }
+
+
+
+
+
+
+
+  File output_aligned_bam = select_first([SamToFastqAndBwaMemAndMba.output_bam, SplitRG.aligned_bam])
+
+
+
+
+  Float mapped_bam_size = size(output_aligned_bam, "GiB")
+
+  # QC the aligned but unsorted readgroup BAM
+  # no reference as the input here is unsorted, providing a reference would cause an error
+  call QC.CollectUnsortedReadgroupBamQualityMetrics as CollectUnsortedReadgroupBamQualityMetrics {
+    input:
+      input_bam = output_aligned_bam,
+      output_bam_prefix = unmapped_bam_basename + ".readgroup",
+      preemptible_tries = papi_settings.preemptible_tries
+  }
+  
+
+
   # MarkDuplicates and SortSam currently take too long for preemptibles if the input data is too large
   Float gb_size_cutoff_for_preemptibles = 110.0
-  Boolean data_too_large_for_preemptibles = SumFloats.total_size > gb_size_cutoff_for_preemptibles
+  Boolean data_too_large_for_preemptibles = mapped_bam_size > gb_size_cutoff_for_preemptibles
 
   # Aggregate aligned+merged flowcell BAM files and mark duplicates
   # We take advantage of the tool's ability to take multiple BAM inputs and write out a single output
   # to avoid having to spend time just merging BAM files.
+
   call Processing.MarkDuplicates as MarkDuplicates {
     input:
-      input_bams = output_aligned_bam,
+      input_bam = output_aligned_bam,
       output_bam_basename = base_file_name + ".aligned.unsorted.duplicates_marked",
       metrics_filename = base_file_name + ".duplicate_metrics",
-      total_input_size = SumFloats.total_size,
+      total_input_size = mapped_bam_size,
       compression_level = compression_level,
       preemptible_tries = if data_too_large_for_preemptibles then 0 else papi_settings.agg_preemptible_tries
   }
@@ -205,6 +215,20 @@ workflow UnmappedBamToAlignedBam {
       preemptible_tries = papi_settings.preemptible_tries
   }
 
+  # Estimate level of cross-sample contamination
+  call Processing.CheckContamination as CheckContamination {
+    input:
+      input_bam = SortSampleBam.output_bam,
+      input_bam_index = SortSampleBam.output_bam_index,
+      contamination_sites_ud = contamination_sites_ud,
+      contamination_sites_bed = contamination_sites_bed,
+      contamination_sites_mu = contamination_sites_mu,
+      ref_fasta = ref_fasta,
+      ref_fasta_index = ref_fasta_index,
+      output_prefix = base_file_name + ".preBqsr",
+      preemptible_tries = papi_settings.agg_preemptible_tries,
+      contamination_underestimation_factor = 0.75
+  }
 
   # We need disk to localize the sharded input and output due to the scatter for BQSR.
   # If we take the number we are scattering by and reduce by 3 we will have enough disk space
@@ -271,19 +295,8 @@ workflow UnmappedBamToAlignedBam {
 
   # Outputs that will be retained when execution is complete
   output {
-    Array[File] quality_yield_metrics = CollectQualityYieldMetrics.quality_yield_metrics
-
-    Array[File] unsorted_read_group_base_distribution_by_cycle_pdf = CollectUnsortedReadgroupBamQualityMetrics.base_distribution_by_cycle_pdf
-    Array[File] unsorted_read_group_base_distribution_by_cycle_metrics = CollectUnsortedReadgroupBamQualityMetrics.base_distribution_by_cycle_metrics
-    Array[File] unsorted_read_group_insert_size_histogram_pdf = CollectUnsortedReadgroupBamQualityMetrics.insert_size_histogram_pdf
-    Array[File] unsorted_read_group_insert_size_metrics = CollectUnsortedReadgroupBamQualityMetrics.insert_size_metrics
-    Array[File] unsorted_read_group_quality_by_cycle_pdf = CollectUnsortedReadgroupBamQualityMetrics.quality_by_cycle_pdf
-    Array[File] unsorted_read_group_quality_by_cycle_metrics = CollectUnsortedReadgroupBamQualityMetrics.quality_by_cycle_metrics
-    Array[File] unsorted_read_group_quality_distribution_pdf = CollectUnsortedReadgroupBamQualityMetrics.quality_distribution_pdf
-    Array[File] unsorted_read_group_quality_distribution_metrics = CollectUnsortedReadgroupBamQualityMetrics.quality_distribution_metrics
-
-    File? cross_check_fingerprints_metrics = CrossCheckFingerprints.cross_check_fingerprints_metrics
-
+    
+    Float contamination = CheckContamination.contamination
 
     File duplicate_metrics = MarkDuplicates.duplicate_metrics
     File output_bqsr_reports = GatherBqsrReports.output_bqsr_report
@@ -292,3 +305,4 @@ workflow UnmappedBamToAlignedBam {
     File output_bam_index = GatherBamFiles.output_bam_index
   }
 }
+

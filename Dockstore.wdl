@@ -61,10 +61,6 @@ workflow ExomeGermlineSingleSample {
     File? fingerprint_genotypes_file
     File? fingerprint_genotypes_index
 
-    File contamination_sites_ud
-    File contamination_sites_bed
-    File contamination_sites_mu
-
     Int haplotype_scatter_count
     Int break_bands_at_multiples_of
 
@@ -96,9 +92,6 @@ workflow ExomeGermlineSingleSample {
 
       fingerprint_genotypes_file = fingerprint_genotypes_file,
       fingerprint_genotypes_index = fingerprint_genotypes_index,
-      contamination_sites_ud = contamination_sites_ud,
-      contamination_sites_bed = contamination_sites_bed,
-      contamination_sites_mu = contamination_sites_mu,
       calling_interval_list = calling_interval_list,
       haplotype_scatter_count = haplotype_scatter_count,
       break_bands_at_multiples_of = break_bands_at_multiples_of,
@@ -159,7 +152,6 @@ workflow ExomeGermlineSingleSample {
       evaluation_interval_list = evaluation_interval_list,
       haplotype_scatter_count = haplotype_scatter_count,
       break_bands_at_multiples_of = break_bands_at_multiples_of,
-      #contamination = UnmappedBamToAlignedBam.contamination,
       input_bam = UnmappedBamToAlignedBam.output_bam,
       input_crai = UnmappedBamToAlignedBam.output_bam_index,
       ref_fasta = ref_fasta,
@@ -193,6 +185,8 @@ workflow ExomeGermlineSingleSample {
   output {
 
     File read_group_alignment_summary_metrics = AggregatedBamQC.read_group_alignment_summary_metrics
+
+
 
     File calculate_read_group_checksum_md5 = AggregatedBamQC.calculate_read_group_checksum_md5
 

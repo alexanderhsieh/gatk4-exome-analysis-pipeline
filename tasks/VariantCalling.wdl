@@ -12,7 +12,6 @@ workflow VariantCalling {
     File evaluation_interval_list
     Int haplotype_scatter_count
     Int break_bands_at_multiples_of
-    Float? contamination
     File input_bam
     File input_crai
 
@@ -62,7 +61,6 @@ workflow VariantCalling {
         ref_dict = ref_dict,
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
-        contamination = contamination,
         preemptible_tries = agg_preemptible_tries,
         hc_scatter = hc_divisor
       }
@@ -73,7 +71,6 @@ workflow VariantCalling {
       # Generate GVCF by interval
       call Calling.HaplotypeCaller_GATK4_VCF as HaplotypeCallerGATK4 {
         input:
-          contamination = contamination,
           input_bam = input_bam,
           input_crai= input_crai,
           interval_list = scattered_interval_list,

@@ -24,7 +24,6 @@ task HaplotypeCaller_GATK35_GVCF {
     File ref_dict
     File ref_fasta
     File ref_fasta_index
-    Float? contamination
     Int preemptible_tries
     Int hc_scatter
   }
@@ -62,7 +61,6 @@ task HaplotypeCaller_GATK35_GVCF {
       --max_alternate_alleles 3 \
       -variant_index_parameter 128000 \
       -variant_index_type LINEAR \
-      -contamination ~{default=0 contamination} \
       --read_filter OverclippedRead
   }
   runtime {
@@ -87,7 +85,6 @@ task HaplotypeCaller_GATK4_VCF {
     File ref_dict
     File ref_fasta
     File ref_fasta_index
-    Float? contamination
     Boolean make_gvcf
     Boolean make_bamout
     Int preemptible_tries
@@ -118,7 +115,6 @@ task HaplotypeCaller_GATK4_VCF {
       -L ~{interval_list} \
       -O ~{output_file_name} \
       --standard-min-confidence-threshold-for-calling 10.0 \
-      -contamination ~{default=0 contamination} \
       -G StandardAnnotation -G StandardHCAnnotation ~{true="-G AS_StandardAnnotation" false="" make_gvcf} \
       -G StrandBiasBySample \
       -G OrientationBiasReadCounts \
