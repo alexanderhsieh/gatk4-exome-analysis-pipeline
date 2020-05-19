@@ -120,6 +120,14 @@ task HaplotypeCaller_GATK4_VCF {
       --standard-min-confidence-threshold-for-calling 10.0 \
       -contamination ~{default=0 contamination} \
       -G StandardAnnotation -G StandardHCAnnotation ~{true="-G AS_StandardAnnotation" false="" make_gvcf} \
+      -G StrandBiasBySample \
+      -G OrientationBiasReadCounts \
+      -G AS_FisherStrand \
+      -G AS_BaseQualityRankSumTest \
+      -G AS_MappingQualityRankSumTest \
+      -G AS_ReadPosRankSumTest \
+      -G AS_QualByDepth \
+      -G AS_StrandOddsRatio \
       -new-qual \
       -GQB 10 -GQB 20 -GQB 30 -GQB 40 -GQB 50 -GQB 60 -GQB 70 -GQB 80 -GQB 90 \
       ~{true="-ERC GVCF" false="" make_gvcf} \
