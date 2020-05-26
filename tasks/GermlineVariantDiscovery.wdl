@@ -116,14 +116,14 @@ task HaplotypeCaller_GATK4_VCF {
       -O ~{output_file_name} \
       --standard-min-confidence-threshold-for-calling 10.0 \
       -G StandardAnnotation -G StandardHCAnnotation ~{true="-G AS_StandardAnnotation" false="" make_gvcf} \
-      -G StrandBiasBySample \
-      -G OrientationBiasReadCounts \
-      -G AS_FisherStrand \
-      -G AS_BaseQualityRankSumTest \
-      -G AS_MappingQualityRankSumTest \
-      -G AS_ReadPosRankSumTest \
-      -G AS_QualByDepth \
-      -G AS_StrandOddsRatio \
+      -A StrandBiasBySample \
+      -A OrientationBiasReadCounts \
+      -A AS_FisherStrand \
+      -A AS_BaseQualityRankSumTest \
+      -A AS_MappingQualityRankSumTest \
+      -A AS_ReadPosRankSumTest \
+      -A AS_QualByDepth \
+      -A AS_StrandOddsRatio \
       -new-qual \
       -GQB 10 -GQB 20 -GQB 30 -GQB 40 -GQB 50 -GQB 60 -GQB 70 -GQB 80 -GQB 90 \
       ~{true="-ERC GVCF" false="" make_gvcf} \
