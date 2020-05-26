@@ -1,9 +1,9 @@
 version 1.0
 
-import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/tasks/GermlineVariantDiscovery.wdl" as Calling
-import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/tasks/Qc.wdl" as QC
-import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/tasks/Utilities.wdl" as Utils
-import "https://raw.githubusercontent.com/talkowski-lab/gatk4-exome-analysis-pipeline/master/tasks/BamProcessing.wdl" as BamProcessing
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/GermlineVariantDiscovery.wdl" as Calling
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/Utilities.wdl" as Utils
+import "https://raw.githubusercontent.com/alexanderhsieh/gatk4-exome-analysis-pipeline/master/tasks/BamProcessing.wdl" as BamProcessing
 
 workflow VariantCalling {
 
