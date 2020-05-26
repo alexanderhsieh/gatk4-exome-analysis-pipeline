@@ -168,7 +168,7 @@ task MergeVCFs {
       INPUT=~{sep=' INPUT=' input_vcfs} \
       OUTPUT=temp.vcf.gz
     zcat temp.vcf.gz |uniq |/usr/gitc/bgzip -c > ~{output_vcf_name}
-    /usr/gitc/tabix ~{output_vcf_name}
+    /usr/gitc/tabix -p vcf ~{output_vcf_name}
     
   }
   runtime {
